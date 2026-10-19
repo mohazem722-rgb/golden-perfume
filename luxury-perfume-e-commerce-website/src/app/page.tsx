@@ -8,17 +8,13 @@ import CountdownTimer from "@/components/CountdownTimer";
 import { OffersSlider, LatestCarousel, SectionHeading } from "@/components/HomeSections";
 import ProductCard from "@/components/ProductCard";
 import { HomeTranslations, CategoriesTranslations, BannerTranslations } from "@/components/ServerT";
+import { categoryImage } from "@/lib/images";
 
 export const dynamic = "force-dynamic";
 
-const CATEGORY_META: { slug: string; img: string }[] = [
-  { slug: "men", img: "https://images.pexels.com/photos/11216321/pexels-photo-11216321.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" },
-  { slug: "women", img: "https://images.pexels.com/photos/37468240/pexels-photo-37468240.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" },
-  { slug: "unisex", img: "https://images.pexels.com/photos/7850600/pexels-photo-7850600.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" },
-  { slug: "oriental", img: "https://images.pexels.com/photos/12402368/pexels-photo-12402368.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" },
-  { slug: "home", img: "https://images.pexels.com/photos/20390720/pexels-photo-20390720.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" },
-  { slug: "gift", img: "https://images.pexels.com/photos/12053220/pexels-photo-12053220.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" },
-];
+const CATEGORY_META: { slug: string; img: string }[] = ["men", "women", "unisex", "oriental", "home", "gift"].map(
+  (slug) => ({ slug, img: categoryImage(slug) })
+);
 
 export default async function HomePage() {
   const offers = await db.select().from(products).where(sql`${products.discount} > 0`).orderBy(desc(products.discount)).limit(5);

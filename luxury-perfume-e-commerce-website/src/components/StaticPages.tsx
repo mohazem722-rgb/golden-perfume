@@ -5,12 +5,7 @@ import { CheckCircle2, ChevronDown, Eye, Landmark, MapPin, Phone, Quote, Send, S
 import Reveal from "./Reveal";
 import { useLang } from "./LanguageProvider";
 import { cn } from "@/lib/utils";
-
-const STORE_IMGS = [
-  "https://images.pexels.com/photos/19663386/pexels-photo-19663386.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-  "https://images.pexels.com/photos/13068365/pexels-photo-13068365.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-  "https://images.pexels.com/photos/28664164/pexels-photo-28664164.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-];
+import { STORE_IMAGES as STORE_IMGS } from "@/lib/images";
 
 /* ---------------- About ---------------- */
 export function AboutPage() {

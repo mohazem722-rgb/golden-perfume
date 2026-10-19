@@ -20,10 +20,7 @@ export default function CalligraphyBg() {
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
-          backgroundAttachment: "fixed",
-          filter: "invert(1) contrast(1.3) brightness(0.9)",
-          mixBlendMode: "screen",
-          opacity: 0.2, // slightly increased to show well under the hero
+          opacity: 0.55,
         }}
       />
     </div>
