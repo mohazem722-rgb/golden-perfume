@@ -10,6 +10,7 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import { eq } from "drizzle-orm";
 import { sql } from "drizzle-orm";
 import { products, shippingRates, coupons, reviews, orders } from "../src/db/schema";
+import { productImageFor } from "../src/lib/images";
 
 // --- load .env / .env.local manually (no dotenv dependency for scripts) ---
 for (const name of [".env.local", ".env"]) {
@@ -30,23 +31,11 @@ const pool = new Pool({
 });
 const db = drizzle(pool);
 
-const pex = (id: number) =>
-  `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940`;
-
-const IMG = {
-  men: [11265021, 7850600, 36834015, 11216321, 11517300, 31771395, 38729524].map(pex),
-  women: [10924522, 29986521, 11216292, 37468240, 28720745, 5790458].map(pex),
-  unisex: [7850600, 12402368, 30981935, 11216292, 11216321].map(pex),
-  oriental: [30981935, 35806942, 3615228, 37387732, 12402368, 12402358, 5790458, 36493389].map(pex),
-  home: [20390718, 20390720, 20390719, 15852128, 6724505, 15852127].map(pex),
-  gift: [12053220, 15737946, 27274882, 10199016, 38729524, 12053220].map(pex),
-};
-const counters: Record<string, number> = {};
-function imgFor(cat: string): string {
-  const poolArr = (IMG as Record<string, string[]>)[cat] || IMG.men;
-  const i = counters[cat] ?? 0;
-  counters[cat] = i + 1;
-  return poolArr[i % poolArr.length];
+const categoryCounters: Record<string, number> = {};
+function imgFor(cat: string, nameEn: string): string {
+  const i = categoryCounters[cat] ?? 0;
+  categoryCounters[cat] = i + 1;
+  return productImageFor(nameEn, cat, i);
 }
 
 type Row = [string, string, string, string, number, string, number, number?];
@@ -228,7 +217,7 @@ async function main() {
         category: c[5],
         sales: c[6],
         discount: c[7] ?? 0,
-        imageUrl: imgFor(c[5]),
+        imageUrl: imgFor(c[5], c[1]),
         rating: seededRating(i),
         reviewsCount: 8 + ((i * 13) % 45),
         stock: 5 + ((i * 11) % 40),
