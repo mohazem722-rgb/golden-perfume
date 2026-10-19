@@ -11,16 +11,23 @@ import { eq } from "drizzle-orm";
 import { sql } from "drizzle-orm";
 import { products, shippingRates, coupons, reviews, orders } from "../src/db/schema";
 
-// --- load .env manually (no dotenv dependency for scripts) ---
-const envPath = path.resolve(process.cwd(), ".env");
-if (fs.existsSync(envPath)) {
-  for (const line of fs.readFileSync(envPath, "utf8").split("\n")) {
-    const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/);
-    if (m && !process.env[m[1]]) process.env[m[1]] = m[2].replace(/^"|"$/g, "");
+// --- load .env / .env.local manually (no dotenv dependency for scripts) ---
+for (const name of [".env.local", ".env"]) {
+  const envPath = path.resolve(process.cwd(), name);
+  if (fs.existsSync(envPath)) {
+    for (const line of fs.readFileSync(envPath, "utf8").split("\n")) {
+      const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/);
+      if (m && !process.env[m[1]]) process.env[m[1]] = m[2].replace(/^"|"$/g, "");
+    }
   }
 }
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+// Seeding must use the DIRECT connection (5432), not the transaction pooler.
+const seedUrl = process.env.DIRECT_URL || process.env.DATABASE_URL;
+const pool = new Pool({
+  connectionString: seedUrl,
+  ssl: seedUrl && /supabase\.(co|com)/.test(seedUrl) ? { rejectUnauthorized: false } : undefined,
+});
 const db = drizzle(pool);
 
 const pex = (id: number) =>

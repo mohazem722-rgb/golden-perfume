@@ -1,6 +1,19 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { Aref_Ruqaa, Inter, Tajawal, Amiri } from "next/font/google";
+// Self-hosted fonts (Fontsource) — no Google Fonts fetch at build time,
+// so `next build` works offline and can never fail on Vercel due to a
+// fonts.googleapis.com outage.
+import "@fontsource/inter/400.css";
+import "@fontsource/inter/500.css";
+import "@fontsource/inter/600.css";
+import "@fontsource/inter/700.css";
+import "@fontsource/tajawal/400.css";
+import "@fontsource/tajawal/500.css";
+import "@fontsource/tajawal/700.css";
+import "@fontsource/amiri/400.css";
+import "@fontsource/amiri/700.css";
+import "@fontsource/aref-ruqaa/400.css";
+import "@fontsource/aref-ruqaa/700.css";
 import "./globals.css";
 import { LanguageProvider } from "@/components/LanguageProvider";
 import { CartProvider } from "@/components/CartProvider";
@@ -33,18 +46,13 @@ const bootScript = `
 })();
 `;
 
-const inter = Inter({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-inter-next" });
-const tajawal = Tajawal({ subsets: ["arabic"], weight: ["400", "500", "700"], variable: "--font-tajawal-next" });
-const amiri = Amiri({ subsets: ["arabic"], weight: ["400", "700"], variable: "--font-amiri-next" });
-const arefRuqaa = Aref_Ruqaa({ subsets: ["arabic"], weight: ["400", "700"], variable: "--font-diwani-next" });
-
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: bootScript }} />
       </head>
-      <body dir="rtl" className={`${inter.variable} ${tajawal.variable} ${amiri.variable} ${arefRuqaa.variable} bg-maison min-h-screen text-[#ece5d3] antialiased`} suppressHydrationWarning>
+      <body dir="rtl" className="bg-maison min-h-screen text-[#ece5d3] antialiased" suppressHydrationWarning>
         <LanguageProvider>
           <CartProvider>
             <CalligraphyBg />
