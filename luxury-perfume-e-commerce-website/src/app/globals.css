@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+:root {
+  --font-inter-next: "Inter";
+  --font-tajawal-next: "Tajawal";
+  --font-amiri-next: "Amiri";
+  --font-diwani-next: "Aref Ruqaa";
+}
+
 @theme {
   --color-noir: #050507;
   --color-navy: #0a1931;

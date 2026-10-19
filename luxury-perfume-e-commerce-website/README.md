@@ -5,16 +5,33 @@ scroll-scrubbed cinematic hero, full commerce flow, and an admin panel.
 
 ## Stack
 - Next.js (App Router) + TypeScript + Tailwind CSS v4 + lucide-react
-- PostgreSQL via Drizzle ORM (local instance, implements the Supabase-style schema:
-  products, orders, coupons, reviews, customers, shipping_rates, subscribers, contact_messages)
+- **Backend: Supabase Postgres** (project `golden-perfume`, eu-central-1) via Drizzle ORM:
+  products, orders, coupons, reviews, customers, shipping_rates, subscribers, contact_messages.
+  RLS is enabled; the browser never talks to the DB directly — all access goes through
+  Next.js API routes using the server-side connection.
+- Self-hosted fonts (Fontsource) — no Google Fonts request at build time.
 
 ## Getting started
 ```bash
+cp .env.example .env.local   # fill in the Supabase keys/passwords
 npm install
-npx drizzle-kit push        # create tables
-npx tsx scripts/seed.ts     # 90 products, 27 governorates, coupons, demo orders
+npm run db:push              # create tables (uses DIRECT_URL, port 5432)
+npm run db:seed              # 90 products, 27 governorates, coupons, demo orders
 npm run dev
 ```
+
+## Deploying on Vercel (verified setup)
+- **Root Directory:** `luxury-perfume-e-commerce-website` (the app is not at repo root)
+- **Framework:** Next.js · **Node:** >= 20 · Region pinned near the DB (`fra1`, see `vercel.json`)
+- Required env vars (Production + Preview):
+  `DATABASE_URL` = Supabase **transaction pooler** URL (port **6543**, user `postgres.<ref>`),
+  `DIRECT_URL` = session-pooler URL (pooler host, port 5432, migrations/seed only —
+  the direct `db.<ref>` host is IPv6-only and unreachable from Vercel builders),
+  `SESSION_SECRET`, `ADMIN_PASSWORD`, `NEXT_PUBLIC_SUPABASE_URL`,
+  `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` (server-only)
+- ⚠️ Never use the direct 5432 URL as `DATABASE_URL` on Vercel: serverless functions
+  would exhaust Postgres connections. The pool in `src/db/index.ts` is capped at
+  1 client per invocation for this reason.
 
 ## Key routes
 - `/` Home (hero scroll scene, offers slider, categories, latest, countdown)
