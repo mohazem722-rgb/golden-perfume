@@ -322,6 +322,8 @@ async function main() {
 }
 
 main().catch(async (e) => {
+  // One-line summary first so it is visible even in truncated build logs.
+  console.error(`SEED_ERROR code=${e?.cause?.code ?? e?.code ?? "?"} message=${e?.cause?.message ?? e?.message ?? e}`);
   console.error(e);
   await pool.end();
   process.exit(1);
