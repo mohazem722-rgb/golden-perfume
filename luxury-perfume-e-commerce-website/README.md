@@ -25,7 +25,8 @@ npm run dev
 - **Framework:** Next.js · **Node:** >= 20 · Region pinned near the DB (`fra1`, see `vercel.json`)
 - Required env vars (Production + Preview):
   `DATABASE_URL` = Supabase **transaction pooler** URL (port **6543**, user `postgres.<ref>`),
-  `DIRECT_URL` = direct URL (port 5432, migrations/seed only),
+  `DIRECT_URL` = session-pooler URL (pooler host, port 5432, migrations/seed only —
+  the direct `db.<ref>` host is IPv6-only and unreachable from Vercel builders),
   `SESSION_SECRET`, `ADMIN_PASSWORD`, `NEXT_PUBLIC_SUPABASE_URL`,
   `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` (server-only)
 - ⚠️ Never use the direct 5432 URL as `DATABASE_URL` on Vercel: serverless functions
